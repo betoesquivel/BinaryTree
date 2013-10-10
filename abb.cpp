@@ -26,6 +26,7 @@ public:
 		T obtenerAbuelo(T dato);
 		void obtenerAntepasados(T dato);
 		void obtenerAntepasadosComunes(T dato1, T dato2);
+		void obtenerPrimos(T dato);
 
 		T obtenerValorMenor();
 		T obtenerValorMayor();
@@ -127,6 +128,32 @@ void ABB<T>::obtenerAntepasadosComunes(T dato1, T dato2)
 		trayecto2 = (dato2 < trayecto2->info? trayecto2->izq : trayecto2->der);
 	}
 }
+template <class T>
+void ABB<T>::obtenerPrimos(T dato)
+{
+	NodoArbol<T> *aux = raiz;
+	NodoArbol<T> *padre = NULL;
+	NodoArbol<T> *abuelo = NULL;
+	while (aux != NULL && aux->info != dato)
+	{
+		abuelo = padre; 
+		padre = aux; 
+		aux = (dato < aux->info? aux->izq : aux->der);
+	}
+	if(abuelo != NULL)
+	{
+		aux = abuelo;
+		aux = (aux->izq !=  padre? aux->izq : aux->der);
+		if(aux!=NULL)
+		{
+			if(aux->izq != NULL)
+				cout<<aux->izq->info<<' ';
+			if(aux->der != NULL)
+				cout<<aux->der->info<<' ';
+			cout<<endl;
+		}
+	}
+}
 
 template <class T>
 T ABB<T>::obtenerValorMenor()
@@ -188,4 +215,8 @@ int main()
 	int dato2;
 	cin>>dato>>dato2;
 	arbol.obtenerAntepasadosComunes(dato, dato2);
+
+	cout << "Imprimir primos del siguiente dato: "<<endl;
+	cin>>dato;
+	arbol.obtenerPrimos(dato);
 }
