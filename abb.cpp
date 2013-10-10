@@ -22,6 +22,11 @@ public:
 		ABB() { raiz = NULL; }
 		void inserta (T dato);
 		bool existe (T dato);
+		int obtenerNivel(T dato);
+		T obtenerAbuelo(T dato);
+		void obtenerAntepasados(T dato);
+		void obtenerAntepasadosComunes(T dato1, T dato2);
+
 		T obtenerValorMenor();
 		T obtenerValorMayor();
 		~ABB() { libera(raiz); }
@@ -61,6 +66,67 @@ bool ABB<T>::existe(T dato)
 		aux = (dato < aux->info? aux->izq : aux->der);
 	return !(aux == NULL);
 }
+template <class T>
+int ABB<T>::obtenerNivel(T dato)
+{
+	NodoArbol<T> *aux = raiz;
+	int nivel = 0; 
+	while (aux != NULL && aux->info != dato)
+	{
+		aux = (dato < aux->info? aux->izq : aux->der);
+		nivel++;
+	}
+	if(!(aux == NULL))
+	{
+		return nivel;
+	}else
+	{
+		return -1;
+	}
+}
+template <class T>
+T ABB<T>::obtenerAbuelo(T dato)
+{
+	NodoArbol<T> *aux = raiz;
+	NodoArbol<T> *padre = NULL;
+	NodoArbol<T> *abuelo = NULL;
+	while (aux != NULL && aux->info != dato)
+	{
+		abuelo = padre; 
+		padre = aux; 
+		aux = (dato < aux->info? aux->izq : aux->der);
+	}
+	if(abuelo != NULL)
+	{
+		return abuelo->info;
+	}else
+	{
+		return -1;
+	}
+}
+template <class T>
+void ABB<T>::obtenerAntepasados(T dato)
+{
+	NodoArbol<T> *aux = raiz;
+	while (aux != NULL && aux->info != dato)
+	{
+		cout<<aux->info<<endl;
+		aux = (dato < aux->info? aux->izq : aux->der);
+	}
+}
+template <class T>
+void ABB<T>::obtenerAntepasadosComunes(T dato1, T dato2)
+{
+	NodoArbol<T> *trayecto1 = raiz;
+	NodoArbol<T> *trayecto2 = raiz;
+	while (trayecto1 != NULL && trayecto2 != NULL && trayecto1->info != dato1 && trayecto2->info != dato2)
+	{
+		if(trayecto1==trayecto2)
+			cout<<trayecto1->info<<endl;
+		trayecto1 = (dato1 < trayecto1->info? trayecto1->izq : trayecto1->der);
+		trayecto2 = (dato2 < trayecto2->info? trayecto2->izq : trayecto2->der);
+	}
+}
 
 template <class T>
 T ABB<T>::obtenerValorMenor()
@@ -92,7 +158,7 @@ int main()
 	ifstream arch;
 	string nomarch;
 	int dato;
-	cout << "Ingrese el nombre del archivo a cargar: ";
+	cout << "Ingrese el nombre del archivo a cargar: "<<endl;
 	cin >> nomarch;
 	arch.open(nomarch.c_str());
 	while (!arch.eof())
@@ -102,11 +168,24 @@ int main()
 	}
 	arch.close();
 	
-	cout << "Dato a buscar: ";
+	cout << "Dato a buscar: "<<endl;
 	cin >> dato;
 	if (arbol.existe(dato))
-		cout << "El dato si existe";
+		cout << "El dato si existe"<<endl;
 	else
-		cout << "El dato no existe";
-	cin>>dato;
+		cout << "El dato no existe"<<endl;;
+
+	cout << "Dato a buscar nivel: "<<endl;
+	cout<< arbol.obtenerNivel(dato)<<endl;
+
+	cout << "Dato para buscar su abuelo: "<<endl;
+	cout<< arbol.obtenerAbuelo(dato)<<endl;
+	
+	cout << "Imprimir antepasados del siguiente dato: "<<endl;
+	arbol.obtenerAntepasados(dato);
+
+	cout << "Imprimir antepasados comunes de los siguientes datos: "<<endl;
+	int dato2;
+	cin>>dato>>dato2;
+	arbol.obtenerAntepasadosComunes(dato, dato2);
 }
