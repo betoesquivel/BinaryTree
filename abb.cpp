@@ -66,27 +66,25 @@ template <class T>
 T ABB<T>::obtenerValorMenor()
 {
 	NodoArbol<T> *actual = raiz;
-	NodoArbol<T> *anterior = NULL;
-	while(actual!=NULL)
+	while(actual->izq == NULL)
 	{
-		anterior=actual;
 		actual=actual->izq;
 	}
-	return anterior->info;
+	if(actual==NULL)
+		return NULL;
+	return actual->info;
 }
 template <class T>
 T ABB<T>::obtenerValorMayor()
 {
 	NodoArbol<T> *actual = raiz;
-	NodoArbol<T> *anterior = NULL;
-	while(actual!=NULL)
+	while(actual->der == NULL)
 	{
-		anterior=actual;
 		actual=actual->der;
 	}
-	if(anterior==NULL)
+	if(actual==NULL)
 		return NULL;
-	return anterior->info;
+	return actual->info;
 }
 int main()
 {
