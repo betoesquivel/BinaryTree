@@ -28,6 +28,7 @@ public:
 		void obtenerAntepasadosComunes(T dato1, T dato2);
 		void obtenerPrimos(T dato);
 
+		int contarNodosPadre(NodoArbol<T> *inicial);
 		T obtenerValorMenor();
 		T obtenerValorMayor();
 		~ABB() { libera(raiz); }
@@ -156,6 +157,24 @@ void ABB<T>::obtenerPrimos(T dato)
 }
 
 template <class T>
+int contarNodosPadre(NodoArbol<T> *inicial, int contadorNodos)
+{
+	if(inicial!=NULL)
+	{
+		if(inicial->der!=NULL)
+		{
+			contadorNodos = contarNodosPadre(inicial->der, contadorNodos);
+		}
+		if(inicial->izq!=NULL)
+		{
+			contadorNodos = contarNodosPadre(inicial->izq, contadorNodos);
+		}
+	}
+	return contadorNodos;
+	
+}
+
+template <class T>
 T ABB<T>::obtenerValorMenor()
 {
 	NodoArbol<T> *actual = raiz;
@@ -194,29 +213,8 @@ int main()
 		arbol.inserta(dato);
 	}
 	arch.close();
+
+	cout<< "Contando nodos."<<endl;
+	contarNodosPadre(arbol.raiz,0);
 	
-	cout << "Dato a buscar: "<<endl;
-	cin >> dato;
-	if (arbol.existe(dato))
-		cout << "El dato si existe"<<endl;
-	else
-		cout << "El dato no existe"<<endl;;
-
-	cout << "Dato a buscar nivel: "<<endl;
-	cout<< arbol.obtenerNivel(dato)<<endl;
-
-	cout << "Dato para buscar su abuelo: "<<endl;
-	cout<< arbol.obtenerAbuelo(dato)<<endl;
-	
-	cout << "Imprimir antepasados del siguiente dato: "<<endl;
-	arbol.obtenerAntepasados(dato);
-
-	cout << "Imprimir antepasados comunes de los siguientes datos: "<<endl;
-	int dato2;
-	cin>>dato>>dato2;
-	arbol.obtenerAntepasadosComunes(dato, dato2);
-
-	cout << "Imprimir primos del siguiente dato: "<<endl;
-	cin>>dato;
-	arbol.obtenerPrimos(dato);
 }
