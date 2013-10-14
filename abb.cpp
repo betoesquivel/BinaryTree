@@ -20,6 +20,7 @@ private:
 		NodoArbol<T> *raiz;
 public:
 		ABB() { raiz = NULL; }
+		NodoArbol<T>* getRaiz(){return raiz;}
 		void inserta (T dato);
 		bool existe (T dato);
 		int obtenerNivel(T dato);
@@ -29,6 +30,9 @@ public:
 		void obtenerPrimos(T dato);
 
 		int contarNodosPadre(NodoArbol<T> *inicial);
+		void desplegarArbol();
+
+
 		T obtenerValorMenor();
 		T obtenerValorMayor();
 		~ABB() { libera(raiz); }
@@ -156,24 +160,30 @@ void ABB<T>::obtenerPrimos(T dato)
 	}
 }
 
+//TAREA PARA EL JUEVES
 template <class T>
-int contarNodosPadre(NodoArbol<T> *inicial, int contadorNodos)
+int ABB<T>::contarNodosPadre(NodoArbol<T> *inicial)
 {
-	if(inicial!=NULL)
+	int numNodosTemp = 0;
+	if(inicial->izq!=NULL || inicial->der!=NULL)
 	{
-		if(inicial->der!=NULL)
-		{
-			contadorNodos = contarNodosPadre(inicial->der, contadorNodos);
-		}
 		if(inicial->izq!=NULL)
-		{
-			contadorNodos = contarNodosPadre(inicial->izq, contadorNodos);
-		}
-	}
-	return contadorNodos;
-	
+			numNodosTemp += contarNodosPadre(inicial->izq);
+		if(inicial->der!=NULL)
+			numNodosTemp += contarNodosPadre(inicial->der);
+		return 1+numNodosTemp;
+	}else
+		return 0;	
 }
 
+template <class T>
+void ABB<T>::desplegarArbol(NodoArbol<T> *inicial)
+{
+
+
+}
+
+//FIN DE TAREA PARA EL JUEVES
 template <class T>
 T ABB<T>::obtenerValorMenor()
 {
@@ -215,6 +225,6 @@ int main()
 	arch.close();
 
 	cout<< "Contando nodos."<<endl;
-	contarNodosPadre(arbol.raiz,0);
+	cout<<arbol.contarNodosPadre(arbol.getRaiz())<<endl;
 	
 }
