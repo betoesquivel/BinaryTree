@@ -32,7 +32,8 @@ public:
 		int contarNodosPadre(NodoArbol<T> *inicial);
 		void desplegarArbol(NodoArbol<T> *inicial);
 		int obtenerNivelRecursivamente(NodoArbol<T> *inicial);
-
+		int contarNodos(NodoArbol<T> *inicial);
+		double calcularPromedio(NodoArbol<T> *inicial, int numeroDeNodos);
 
 		T obtenerValorMenor();
 		T obtenerValorMayor();
@@ -183,11 +184,11 @@ void ABB<T>::desplegarArbol(NodoArbol<T> *inicial)
 
 	if(inicial!=NULL)
 	{
-		desplegarArbol(inicial->izq);
 		if(inicial->izq != NULL || inicial->der != NULL)
 			cout<<"Padre: "<<inicial->info<<endl;
 		else
 			cout<<"Hoja: "<<inicial->info<<endl;
+		desplegarArbol(inicial->izq);
 		desplegarArbol(inicial->der);
 	}
 }
@@ -200,11 +201,36 @@ int ABB<T>::obtenerNivelRecursivamente(NodoArbol<T> *inicial)
 	{
 		nivel_izquierdo = obtenerNivelRecursivamente(inicial->izq);
 		nivel_derecho = obtenerNivelRecursivamente(inicial->der);
-		return (nivel_izquierdo > nivel_derecho) ? nivel_izquierdo:nivel_derecho;
+		return (nivel_izquierdo > nivel_derecho) ? (nivel_izquierdo+1):(nivel_derecho+1);
 	}
 	else
 	{
-		return 1;
+		return 0;
+	}
+}
+
+template <class T>
+int ABB<T>::contarNodos(NodoArbol<T> *inicial)
+{
+	if(inicial!=NULL)
+	{
+		return 1+contarNodos(inicial->izq)+contarNodos(inicial->der);
+	}else
+	{
+		return 0;
+	}
+}
+
+template <class T>
+double ABB<T>::calcularPromedio(NodoArbol<T> *inicial, int numeroDeNodos)
+{
+	if(inicial!=NULL)
+	{
+		return (inicial->info)*(1.00)/numeroDeNodos + calcularPromedio(inicial->izq, numeroDeNodos) + calcularPromedio(inicial->der, numeroDeNodos);
+
+	}else
+	{
+		return 0;
 	}
 }
 //FIN DE TAREA PARA EL JUEVES
@@ -250,8 +276,18 @@ int main()
 
 	cout<<"Contando nodos padre:"<<endl;
 	cout<<arbol.contarNodosPadre(arbol.getRaiz())<<endl;
+	cout<<arbol.contarNodosPadre(arbol.getRaiz()->der)<<endl;
+	
+	//cout<<"Despliego arbol: "<<endl;
+	//arbol.desplegarArbol(arbol.getRaiz());
 
 	cout<<"Contando niveles del arbol:"<<endl;
 	cout<<arbol.obtenerNivelRecursivamente(arbol.getRaiz())<<endl;
+	cout<<arbol.obtenerNivelRecursivamente(arbol.getRaiz()->izq)<<endl;
+	cout<<arbol.obtenerNivelRecursivamente(arbol.getRaiz()->der)<<endl;
+
+	cout<<"Calcular promedio:"<<endl;
+	cout<<arbol.calcularPromedio(arbol.getRaiz(),arbol.contarNodos(arbol.getRaiz()))<<endl;
+	cout<<arbol.calcularPromedio(arbol.getRaiz()->izq,arbol.contarNodos(arbol.getRaiz()->izq))<<endl;
 	
 }
