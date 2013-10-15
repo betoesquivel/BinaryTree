@@ -30,7 +30,7 @@ public:
 		void obtenerPrimos(T dato);
 
 		int contarNodosPadre(NodoArbol<T> *inicial);
-		void desplegarArbol();
+		void desplegarArbol(NodoArbol<T> *inicial);
 
 
 		T obtenerValorMenor();
@@ -164,23 +164,29 @@ void ABB<T>::obtenerPrimos(T dato)
 template <class T>
 int ABB<T>::contarNodosPadre(NodoArbol<T> *inicial)
 {
-	int numNodosTemp = 0;
 	if(inicial->izq!=NULL || inicial->der!=NULL)
 	{
-		if(inicial->izq!=NULL)
-			numNodosTemp += contarNodosPadre(inicial->izq);
-		if(inicial->der!=NULL)
-			numNodosTemp += contarNodosPadre(inicial->der);
-		return 1+numNodosTemp;
+		if(inicial->izq != NULL)
+			contarNodosPadre(inicial->izq);
+		if(inicial->der != NULL)
+			contarNodosPadre(inicial->der);
+		return 1+contarNodosPadre(inicial->izq)+contarNodosPadre(inicial->der);
 	}else
-		return 0;	
+	{
+		return 0;
+	}
 }
 
 template <class T>
 void ABB<T>::desplegarArbol(NodoArbol<T> *inicial)
 {
 
-
+	if(inicial!=NULL)
+	{
+		desplegarArbol(inicial->izq);
+		cout<<inicial->info<<endl;
+		desplegarArbol(inicial->der);
+	}
 }
 
 //FIN DE TAREA PARA EL JUEVES
@@ -226,5 +232,7 @@ int main()
 
 	cout<< "Contando nodos."<<endl;
 	cout<<arbol.contarNodosPadre(arbol.getRaiz())<<endl;
+
+	arbol.desplegarArbol(arbol.getRaiz());
 	
 }
