@@ -31,6 +31,7 @@ public:
 
 		int contarNodosPadre(NodoArbol<T> *inicial);
 		void desplegarArbol(NodoArbol<T> *inicial);
+		int obtenerNivelRecursivamente(NodoArbol<T> *inicial);
 
 
 		T obtenerValorMenor();
@@ -164,13 +165,12 @@ void ABB<T>::obtenerPrimos(T dato)
 template <class T>
 int ABB<T>::contarNodosPadre(NodoArbol<T> *inicial)
 {
-	if(inicial->izq!=NULL || inicial->der!=NULL)
+	if(inicial!=NULL)
 	{
-		if(inicial->izq != NULL)
-			contarNodosPadre(inicial->izq);
-		if(inicial->der != NULL)
-			contarNodosPadre(inicial->der);
-		return 1+contarNodosPadre(inicial->izq)+contarNodosPadre(inicial->der);
+		if(inicial->izq != NULL || inicial->der != NULL)
+			return 1+contarNodosPadre(inicial->izq)+contarNodosPadre(inicial->der);
+		else
+			return 0;
 	}else
 	{
 		return 0;
@@ -184,11 +184,29 @@ void ABB<T>::desplegarArbol(NodoArbol<T> *inicial)
 	if(inicial!=NULL)
 	{
 		desplegarArbol(inicial->izq);
-		cout<<inicial->info<<endl;
+		if(inicial->izq != NULL || inicial->der != NULL)
+			cout<<"Padre: "<<inicial->info<<endl;
+		else
+			cout<<"Hoja: "<<inicial->info<<endl;
 		desplegarArbol(inicial->der);
 	}
 }
 
+template <class T>
+int ABB<T>::obtenerNivelRecursivamente(NodoArbol<T> *inicial)
+{
+	int nivel_izquierdo, nivel_derecho;
+	if(inicial!=NULL)
+	{
+		nivel_izquierdo = obtenerNivelRecursivamente(inicial->izq);
+		nivel_derecho = obtenerNivelRecursivamente(inicial->der);
+		return (nivel_izquierdo > nivel_derecho) ? nivel_izquierdo:nivel_derecho;
+	}
+	else
+	{
+		return 1;
+	}
+}
 //FIN DE TAREA PARA EL JUEVES
 template <class T>
 T ABB<T>::obtenerValorMenor()
@@ -230,9 +248,10 @@ int main()
 	}
 	arch.close();
 
-	cout<< "Contando nodos."<<endl;
+	cout<<"Contando nodos padre:"<<endl;
 	cout<<arbol.contarNodosPadre(arbol.getRaiz())<<endl;
 
-	arbol.desplegarArbol(arbol.getRaiz());
+	cout<<"Contando niveles del arbol:"<<endl;
+	cout<<arbol.obtenerNivelRecursivamente(arbol.getRaiz())<<endl;
 	
 }
