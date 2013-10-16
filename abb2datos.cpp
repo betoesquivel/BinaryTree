@@ -122,10 +122,12 @@ int main()
 {
 	ABB<int> arbol;
 	ifstream arch;
+	ofstream archivoSalida;
 	string nomarch;
 	int dato;
 	cout << "Ingrese el nombre del archivo a cargar: "<<endl;
 	cin >> nomarch;
+
 	arch.open(nomarch.c_str());
 	while (!arch.eof())
 	{
@@ -134,6 +136,26 @@ int main()
 	}
 	arch.close();
 
+	cout<<"Este es el arbol guardado en el archivo: "<<endl;
 	arbol.desplegarArbol(arbol.getRaiz());
 
+	int decision; 
+	cout<<"\nDesea insertar mas datos al arbol? \n1)Si \n2) No"<<endl;
+	cin>>decision;
+	archivoSalida.open(nomarch.c_str(), ios::app);
+	while(decision==1)
+	{
+		cout<<"Inserte un dato entero:"<<endl;
+		cin>>dato;
+
+		archivoSalida<<dato<<endl;
+		arbol.insertarDatoRecursivamente(arbol.getRaiz(), dato);
+
+		cout<<"\nDesea insertar mas datos al arbol? \n1)Si \n2)No"<<endl;
+		cin>>decision;
+	}
+	archivoSalida.close();
+
+	cout<<"Este es el arbol modificado guardado en el archivo: "<<endl;
+	arbol.desplegarArbol(arbol.getRaiz());
 }
