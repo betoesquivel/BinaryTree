@@ -34,6 +34,7 @@ public:
 		int obtenerNivelRecursivamente(NodoArbol<T> *inicial);
 		int contarNodos(NodoArbol<T> *inicial);
 		double calcularPromedio(NodoArbol<T> *inicial, int numeroDeNodos);
+		bool buscarDato(NodoArbol<T> *inicial, T dato);
 
 		T obtenerValorMenor();
 		T obtenerValorMayor();
@@ -232,6 +233,27 @@ double ABB<T>::calcularPromedio(NodoArbol<T> *inicial, int numeroDeNodos)
 	{
 		return 0;
 	}
+}
+
+template <class T>
+bool ABB<T>::buscarDato(NodoArbol<T> *inicial, T dato)
+{
+	if(inicial!=NULL)
+	{
+		if(inicial->info == dato)
+		{
+			return true;
+		}
+		else
+		{
+			buscarDato(inicial->izq, dato);
+			buscarDato(inicial->der, dato);
+		}
+	}else
+	{
+		return false;
+	}
+
 }
 //FIN DE TAREA PARA EL JUEVES
 template <class T>
