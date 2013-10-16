@@ -244,12 +244,16 @@ bool ABB<T>::buscarDato(NodoArbol<T> *inicial, T dato)
 		{
 			return true;
 		}
+		else if(dato > inicial->info)
+		{
+			return buscarDato(inicial->der, dato);
+		}
 		else
 		{
-			buscarDato(inicial->izq, dato);
-			buscarDato(inicial->der, dato);
+			return buscarDato(inicial->izq, dato);
 		}
-	}else
+	}
+	else
 	{
 		return false;
 	}
