@@ -35,6 +35,7 @@ public:
 		int contarNodos(NodoArbol<T> *inicial);
 		double calcularPromedio(NodoArbol<T> *inicial, int numeroDeNodos);
 		bool buscarDato(NodoArbol<T> *inicial, T dato);
+		void insertarDatoRecursivamente(NodoArbol<T>* inicial, T dato);
 
 		T obtenerValorMenor();
 		T obtenerValorMayor();
@@ -259,6 +260,43 @@ bool ABB<T>::buscarDato(NodoArbol<T> *inicial, T dato)
 	}
 
 }
+
+template <class T>
+void ABB<T>::insertarDatoRecursivamente(NodoArbol<T> *inicial, T dato)
+{
+	if(inicial!=NULL)
+	{
+		if(inicial->info > dato)
+		{
+			if(inicial->izq != NULL)
+			{
+				insertarDatoRecursivamente(inicial->izq, dato);
+			}
+			else
+			{
+				NodoArbol<T> *nuevo = new NodoArbol<T>(dato);
+				inicial->izq = nuevo;
+			}
+		}
+		else
+		{
+			if(inicial->der != NULL)
+			{
+				insertarDatoRecursivamente(inicial->der, dato);
+			}
+			else
+			{
+				NodoArbol<T> *nuevo = new NodoArbol<T>(dato);
+				inicial->der = nuevo;
+			}
+		}
+	}
+	else
+	{
+		NodoArbol<T> *nuevo = new NodoArbol<T>(dato);
+		raiz = nuevo;
+	}
+}
 //FIN DE TAREA PARA EL JUEVES
 template <class T>
 T ABB<T>::obtenerValorMenor()
@@ -316,4 +354,14 @@ int main()
 	cout<<arbol.calcularPromedio(arbol.getRaiz(),arbol.contarNodos(arbol.getRaiz()))<<endl;
 	cout<<arbol.calcularPromedio(arbol.getRaiz()->izq,arbol.contarNodos(arbol.getRaiz()->izq))<<endl;
 	
+	cout<<"Buscar dato:"<<endl;
+	cout<<arbol.buscarDato(arbol.getRaiz(),196)<<endl;
+	cout<<arbol.buscarDato(arbol.getRaiz(),-1)<<endl;
+
+	cout<<"Insertar dato:"<<endl;
+	arbol.insertarDatoRecursivamente(arbol.getRaiz(),16);
+	
+	cout<<"Buscar dato:"<<endl;
+	cout<<arbol.buscarDato(arbol.getRaiz(),16)<<endl;
+	cout<<arbol.buscarDato(arbol.getRaiz(),-1)<<endl;
 }
