@@ -25,10 +25,11 @@ using namespace std;
 template <class T>
 class NodoArbol
 { public:
-	T info, info2;
+	T info;
+	int repeticiones;
 	NodoArbol<T> *izq, *der;
 	NodoArbol() { izq = der = NULL; }
-	NodoArbol(T dato, T dato2) { info = dato; info2 = dato2; izq = der = NULL; }
+	NodoArbol(T dato){ info = dato; repeticiones = 0; izq = der = NULL; }
 };
 
 template <class T>
@@ -39,8 +40,8 @@ private:
 public:
 		ABB() { raiz = NULL; }
 		NodoArbol<T>* getRaiz(){return raiz;}
-		void inserta (T dato);
-		bool existe (T dato);
+		void insertarDatoRecursivamente(NodoArbol<T> *inicial, T dato);
+		void desplegarArbol(NodoArbol<T> *inicial);
 		~ABB() { libera(raiz); }
 };
 
@@ -55,27 +56,84 @@ void libera (NodoArbol<T>* raiz)
 }
 
 template <class T>
-void ABB<T>::inserta (T valor)
-{ //Precondición: el valor no existe en el árbol.
-	NodoArbol<T> *NuevoNodo = new NodoArbol<T>(valor);
-	NodoArbol<T> *actual = raiz, *anterior = NULL;
-	while (actual != NULL)
+void ABB<T>::insertarDatoRecursivamente(NodoArbol<T> *inicial, T dato)
+{
+	if(inicial!=NULL)
 	{
-		anterior=actual;
-		actual=(actual->info>valor? actual->izq: actual->der);
+		if(inicial->info == dato)
+		{
+			inicial->repeticiones += 1;
+
+		}
+		else if(dato < inicial->info)
+		{
+			if(inicial->izq != NULL)
+			{
+				insertarDatoRecursivamente(inicial->izq, dato);
+			}
+			else
+			{
+				NodoArbol<T> *nuevo = new NodoArbol<T>(dato);
+				inicial->izq = nuevo;
+			}
+
+		}
+		else
+		{
+			if(inicial->der != NULL)
+			{
+				insertarDatoRecursivamente(inicial->der, dato);
+			}
+			else
+			{
+				NodoArbol<T> *nuevo = new NodoArbol<T>(dato);
+				inicial->der = nuevo;
+			}
+		}
 	}
-	if (anterior==NULL)	raiz = NuevoNodo;
 	else
-		if (anterior->info > valor) anterior->izq = NuevoNodo;
-		else anterior->der = NuevoNodo;
+	{
+		NodoArbol<T> *nuevo = new NodoArbol<T>(dato);
+		raiz = nuevo;
+	}
 }
 
 template <class T>
-bool ABB<T>::existe(T dato)
+void ABB<T>::desplegarArbol(NodoArbol<T> *inicial)
 {
-	NodoArbol<T> *aux = raiz;
-	while (aux != NULL && aux->info != dato)
-		aux = (dato < aux->info? aux->izq : aux->der);
-	return !(aux == NULL);
-}
 
+	if(inicial!=NULL)
+	{
+		desplegarArbol(inicial->izq);
+		if(inicial->repeticiones == 0)
+		{
+			cout<<inicial->info<<endl;
+		}
+		else
+		{
+			for(int i = 0; i<inicial->repeticiones; i++) 
+				cout<<inicial->info<<' ';
+			cout<<endl;
+		}
+		desplegarArbol(inicial->der);
+	}
+}
+int main()
+{
+	ABB<int> arbol;
+	ifstream arch;
+	string nomarch;
+	int dato;
+	cout << "Ingrese el nombre del archivo a cargar: "<<endl;
+	cin >> nomarch;
+	arch.open(nomarch.c_str());
+	while (!arch.eof())
+	{
+		arch >> dato;
+		arbol.insertarDatoRecursivamente(arbol.getRaiz(), dato);
+	}
+	arch.close();
+
+	arbol.desplegarArbol(arbol.getRaiz());
+
+}
