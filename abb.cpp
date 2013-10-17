@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <queue>
 
 using namespace std;
 
@@ -36,6 +37,7 @@ public:
 		double calcularPromedio(NodoArbol<T> *inicial, int numeroDeNodos);
 		bool buscarDato(NodoArbol<T> *inicial, T dato);
 		void insertarDatoRecursivamente(NodoArbol<T>* inicial, T dato);
+		void desplegarArbolNivelPorNivel();
 
 		T obtenerValorMenor();
 		T obtenerValorMayor();
@@ -297,6 +299,22 @@ void ABB<T>::insertarDatoRecursivamente(NodoArbol<T> *inicial, T dato)
 		raiz = nuevo;
 	}
 }
+template <class T>
+void ABB<T>::desplegarArbolNivelPorNivel()
+{
+	queue< NodoArbol<T>* > fila;
+	fila.push(raiz);
+	while(!fila.empty())
+	{
+		NodoArbol<T> *temporal = fila.front();
+		fila.pop();
+		cout<<temporal->info<<endl;
+		if(temporal->izq!=NULL)
+			fila.push(temporal->izq);
+		if(temporal->der!=NULL)
+			fila.push(temporal->der);
+	}
+}
 //FIN DE TAREA PARA EL JUEVES
 template <class T>
 T ABB<T>::obtenerValorMenor()
@@ -364,4 +382,7 @@ int main()
 	cout<<"Buscar dato:"<<endl;
 	cout<<arbol.buscarDato(arbol.getRaiz(),16)<<endl;
 	cout<<arbol.buscarDato(arbol.getRaiz(),-1)<<endl;
+
+	cout<<"Desplegar arbol nivel por nivel:"<<endl;
+	arbol.desplegarArbolNivelPorNivel();
 }
