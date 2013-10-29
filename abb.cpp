@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <queue>
 
 using namespace std;
 
@@ -37,6 +38,7 @@ public:
 		double calcularPromedio(NodoArbol<T> *inicial, int numeroDeNodos);
 		bool buscarDato(NodoArbol<T> *inicial, T dato);
 		void insertarDatoRecursivamente(NodoArbol<T>* inicial, T dato);
+		void desplegarArbolNivelPorNivel();
 
 		T obtenerValorMenor();
 		T obtenerValorMayor();
@@ -49,7 +51,7 @@ void libera (NodoArbol<T>* raiz)
 	if (raiz != NULL)
 	{ 	libera(raiz->izq);
 		libera(raiz->der);
-		delete(raiz);
+	delete(raiz);
 	}
 }
 
@@ -169,134 +171,150 @@ void ABB<T>::obtenerPrimos(T dato)
 template <class T>
 int ABB<T>::contarNodosPadre(NodoArbol<T> *inicial)
 {
-	if(inicial!=NULL)
-	{
-		if(inicial->izq != NULL || inicial->der != NULL)
-			return 1+contarNodosPadre(inicial->izq)+contarNodosPadre(inicial->der);
-		else
-			return 0;
-	}else
-	{
-		return 0;
-	}
+if(inicial!=NULL)
+{
+if(inicial->izq != NULL || inicial->der != NULL)
+	return 1+contarNodosPadre(inicial->izq)+contarNodosPadre(inicial->der);
+else
+	return 0;
+}else
+{
+return 0;
+}
 }
 
 template <class T>
 void ABB<T>::desplegarArbol(NodoArbol<T> *inicial)
 {
 
-	if(inicial!=NULL)
-	{
-		if(inicial->izq != NULL || inicial->der != NULL)
-			cout<<"Padre: "<<inicial->info<<endl;
-		else
-			cout<<"Hoja: "<<inicial->info<<endl;
-		desplegarArbol(inicial->izq);
-		desplegarArbol(inicial->der);
-	}
+if(inicial!=NULL)
+{
+if(inicial->izq != NULL || inicial->der != NULL)
+	cout<<"Padre: "<<inicial->info<<endl;
+else
+	cout<<"Hoja: "<<inicial->info<<endl;
+desplegarArbol(inicial->izq);
+desplegarArbol(inicial->der);
+}
 }
 
 template <class T>
 int ABB<T>::obtenerNivelRecursivamente(NodoArbol<T> *inicial)
 {
-	int nivel_izquierdo, nivel_derecho;
-	if(inicial!=NULL)
-	{
-		nivel_izquierdo = obtenerNivelRecursivamente(inicial->izq);
-		nivel_derecho = obtenerNivelRecursivamente(inicial->der);
-		return (nivel_izquierdo > nivel_derecho) ? (nivel_izquierdo+1):(nivel_derecho+1);
-	}
-	else
-	{
-		return 0;
-	}
+int nivel_izquierdo, nivel_derecho;
+if(inicial!=NULL)
+{
+nivel_izquierdo = obtenerNivelRecursivamente(inicial->izq);
+nivel_derecho = obtenerNivelRecursivamente(inicial->der);
+return (nivel_izquierdo > nivel_derecho) ? (nivel_izquierdo+1):(nivel_derecho+1);
+}
+else
+{
+return 0;
+}
 }
 
 template <class T>
 int ABB<T>::contarNodos(NodoArbol<T> *inicial)
 {
-	if(inicial!=NULL)
-	{
-		return 1+contarNodos(inicial->izq)+contarNodos(inicial->der);
-	}else
-	{
-		return 0;
-	}
+if(inicial!=NULL)
+{
+return 1+contarNodos(inicial->izq)+contarNodos(inicial->der);
+}else
+{
+return 0;
+}
 }
 
 template <class T>
 double ABB<T>::calcularPromedio(NodoArbol<T> *inicial, int numeroDeNodos)
 {
-	if(inicial!=NULL)
-	{
-		return (inicial->info)*(1.00)/numeroDeNodos + calcularPromedio(inicial->izq, numeroDeNodos) + calcularPromedio(inicial->der, numeroDeNodos);
+if(inicial!=NULL)
+{
+return (inicial->info)*(1.00)/numeroDeNodos + calcularPromedio(inicial->izq, numeroDeNodos) + calcularPromedio(inicial->der, numeroDeNodos);
 
-	}else
-	{
-		return 0;
-	}
+}else
+{
+return 0;
+}
 }
 
 template <class T>
 bool ABB<T>::buscarDato(NodoArbol<T> *inicial, T dato)
 {
-	if(inicial!=NULL)
-	{
-		if(inicial->info == dato)
-		{
-			return true;
-		}
-		else if(dato > inicial->info)
-		{
-			return buscarDato(inicial->der, dato);
-		}
-		else
-		{
-			return buscarDato(inicial->izq, dato);
-		}
-	}
-	else
-	{
-		return false;
-	}
+if(inicial!=NULL)
+{
+if(inicial->info == dato)
+{
+	return true;
+}
+else if(dato > inicial->info)
+{
+	return buscarDato(inicial->der, dato);
+}
+else
+{
+	return buscarDato(inicial->izq, dato);
+}
+}
+else
+{
+return false;
+}
 
 }
 
 template <class T>
 void ABB<T>::insertarDatoRecursivamente(NodoArbol<T> *inicial, T dato)
 {
-	if(inicial!=NULL)
+if(inicial!=NULL)
+{
+if(inicial->info > dato)
+{
+	if(inicial->izq != NULL)
 	{
-		if(inicial->info > dato)
-		{
-			if(inicial->izq != NULL)
-			{
-				insertarDatoRecursivamente(inicial->izq, dato);
-			}
-			else
-			{
-				NodoArbol<T> *nuevo = new NodoArbol<T>(dato);
-				inicial->izq = nuevo;
-			}
-		}
-		else
-		{
-			if(inicial->der != NULL)
-			{
-				insertarDatoRecursivamente(inicial->der, dato);
-			}
-			else
-			{
-				NodoArbol<T> *nuevo = new NodoArbol<T>(dato);
-				inicial->der = nuevo;
-			}
-		}
+		insertarDatoRecursivamente(inicial->izq, dato);
 	}
 	else
 	{
 		NodoArbol<T> *nuevo = new NodoArbol<T>(dato);
-		raiz = nuevo;
+		inicial->izq = nuevo;
 	}
+}
+else
+{
+	if(inicial->der != NULL)
+	{
+		insertarDatoRecursivamente(inicial->der, dato);
+	}
+	else
+	{
+		NodoArbol<T> *nuevo = new NodoArbol<T>(dato);
+		inicial->der = nuevo;
+	}
+}
+}
+else
+{
+NodoArbol<T> *nuevo = new NodoArbol<T>(dato);
+raiz = nuevo;
+}
+}
+template <class T>
+void ABB<T>::desplegarArbolNivelPorNivel()
+{
+queue< NodoArbol<T>* > fila;
+fila.push(raiz);
+while(!fila.empty())
+{
+	NodoArbol<T> *temporal = fila.front();
+	fila.pop();
+	cout<<temporal->info<<endl;
+	if(temporal->izq!=NULL)
+		fila.push(temporal->izq);
+	if(temporal->der!=NULL)
+		fila.push(temporal->der);
+}
 }
 //FIN DE TAREA PARA EL JUEVES
 template <class T>
@@ -365,4 +383,7 @@ int main()
 	cout<<"Buscar dato:"<<endl;
 	cout<<arbol.buscarDato(arbol.getRaiz(),16)<<endl;
 	cout<<arbol.buscarDato(arbol.getRaiz(),-1)<<endl;
+
+	cout<<"Desplegar arbol nivel por nivel:"<<endl;
+	arbol.desplegarArbolNivelPorNivel();
 }
